@@ -4,6 +4,8 @@ from django.urls import reverse
 import logging
 from .models import Post
 from django.http import Http404
+from django.core.paginator import Paginator
+from .forms import ContactForm
 
 # Create your views here.
 # static demo data
@@ -17,9 +19,14 @@ def index(request):
     blog_title = "Latest Posts"
 
     # getting data from post model
-    posts = Post.objects.all()
+    all_posts = Post.objects.all()
 
-    return render(request, 'blog/index.html', {'blog_title': blog_title, 'posts': posts})
+    # paginate
+    paginator = Paginator(all_posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'blog/index.html', {'blog_title': blog_title, 'page_obj':page_obj})
 
 def detail(request, slug):
     # static data
@@ -42,3 +49,12 @@ def old_url_redirect(request):
 
 def new_url_view(request):
     return HttpResponse("This is the new URL")
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            logger = logging.getLogger("TESTING")
+            logger.debug(f"POST Data is {form.cleaned_data['name']} {form.cleaned_data['email']} {form.cleaned_data['message']}")
+    return render(request, 'blog/contact.html')
+
