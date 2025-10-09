@@ -26,3 +26,7 @@ class Post(models.Model):
         return self.title
     
 
+class AboutUs(models.Model):
+    content = models.TextField()
+    
+
