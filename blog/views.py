@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 import logging
+
 from .models import Post, AboutUs
 from django.http import Http404
 from django.core.paginator import Paginator
-from .forms import ContactForm, LoginForm, RegisterForm
+from .forms import ContactForm, ForgotPasswordForm, LoginForm, RegisterForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 
 # Create your views here.
 # static demo data
@@ -98,12 +101,27 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
+                print("LOGIN SUCCESS!")
                 return redirect("blog:dashboard") # redirect to dashboard
-
-            print("LOGIN SUCCESS!")
 
     return render(request, 'blog/login.html',{'form': form})
 
 def dashboard(request):
     blog_title = "My Posts"
     return render(request, 'blog/dashboard.html', {"blog_title": blog_title})
+
+def logout(request):
+    auth_logout(request)
+    return redirect("blog:index")
+
+def forgot_password(request):
+    if request.method == 'POST':
+        #form
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+            # send email to reset password
+            token = default_token_generator.make_token(user)
+
+    return render(request, 'blog/forgot_password.html')
