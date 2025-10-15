@@ -148,3 +148,11 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+DEFAULT_FROM_EMAIL = 'your_email@miranda.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '708d8718541388'
+EMAIL_HOST_PASSWORD = 'c246aeb58fdd29'
