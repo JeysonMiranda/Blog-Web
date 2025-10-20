@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
 import logging
@@ -188,3 +188,8 @@ def new_post(request):
             return redirect('blog:dashboard')
 
     return render(request, 'blog/new_post.html', {'categories': categories, 'form' : form})
+
+def edit_post(request, post_id):
+    categories = Category.objects.all()
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'blog/edit_post.html', {'categories': categories, 'post':post})
