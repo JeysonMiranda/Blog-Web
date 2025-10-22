@@ -90,7 +90,7 @@ class PostForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
 
         if not cleaned_data.get('img_url'):
-             post.img_url = 'No_image_available.png'
+             post.img_url = 'default/No_image_available.png'
 
         # if cleaned_data.get('img_url'):
         #     post.img_url = cleaned_data.get('img_url')
