@@ -97,8 +97,8 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             #add user to readers group
-            readers_group,created = Group.objects.get_or_create(name="Readers")
-            user.groups.add(readers_group)
+            authors_group,created = Group.objects.get_or_create(name="Authors")
+            user.groups.add(authors_group)
             messages.success(request, 'Registration Successfull. You can Login now.')
             return redirect("blog:login")
     return render(request, 'blog/register.html', {'form': form})
